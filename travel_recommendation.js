@@ -4,6 +4,7 @@ const typeOfRecommendation = {
     country: "countries"
 };
 
+
 async function search() {
     const searchInput = document
         .getElementById("search-input")
@@ -20,10 +21,14 @@ async function search() {
         const response = await fetch("travel_recommendation_api.json");
 
         if (!response.ok) {
-            throw new Error("Erro ao carregar o arquivo JSON");
+            throw new Error("Error loading the JSON file");
         }
 
         const data = await response.json();
+
+        if (category === "countries") {
+            return data.countries.flatMap(country => country.cities);
+        }
 
         return data[category] ?? [];
     } catch (error) {
@@ -31,6 +36,7 @@ async function search() {
         return [];
     }
 }
+
 
 async function searchResult() {
     const searchResults = document.getElementById("search-results");
@@ -44,6 +50,8 @@ async function searchResult() {
     }
 
     searchResults.classList.add("visible");
+
+    console.log(data)
 
     data.forEach((item) => {
         const div = document.createElement("div");
